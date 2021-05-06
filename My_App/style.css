@@ -1,0 +1,33 @@
+header {
+    margin-left: 25%;
+}
+
+body {
+    background-color: rgb(110, 102, 102);
+}
+
+.main-div {
+    margin-left: 15%;
+}
+
+table {
+    background-color: burlywood;
+}
+
+tr {
+    text-align: center;
+}
+
+.section-footer {
+    position: absolute;
+    bottom: 0px;
+}
+
+.button-control {
+    width: 5%;
+}
+
+.new-row-control {
+    width: 100%;
+    margin-top: 3%;
+}
