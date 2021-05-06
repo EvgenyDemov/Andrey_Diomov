@@ -25,9 +25,10 @@ function addRow(tableID) {
 
     var nameText = document.createElement("text");
     nameText.innerHTML = nameElement.value;
+    nameText.className = "read-mode";
 
     var nameSelect = createSelectElement(nameElement.value);
-    nameSelect.className = "hidden";
+    nameSelect.className = "hidden edit-mode";
 
     var cell2 = row.insertCell(1);
     cell2.appendChild(nameSelect);
@@ -37,9 +38,10 @@ function addRow(tableID) {
 
     var dateText = document.createElement("text");
     dateText.innerHTML = dateVal != "" ? dateVal : "текущая дата";
+    dateText.className = "read-mode";
 
     var dateInput = document.createElement("input");
-    dateInput.className = "hidden";
+    dateInput.className = "hidden edit-mode";
     dateInput.type = "datetime-local";
 
     var cell3 = row.insertCell(2);
@@ -47,8 +49,8 @@ function addRow(tableID) {
     cell3.appendChild(dateText);
 
     var cell4 = row.insertCell(3);
-    var deleteButton = createButton("Delete", "", function() { deleteRow(row.rowIndex) });
-    var saveButton = createButton("Save", "hidden", function() {
+    var deleteButton = createButton("Delete", "read-mode", function() { deleteRow(row.rowIndex) });
+    var saveButton = createButton("Save", "hidden edit-mode", function() {
         showElements([nameText, dateText, updateButton, deleteButton], true);
         showElements([nameSelect, dateInput, saveButton, cancelButton], false);
 
@@ -59,12 +61,14 @@ function addRow(tableID) {
     cell4.appendChild(saveButton);
 
     var cell5 = row.insertCell(4);
-    var cancelButton = createButton("Cancel", "hidden", function() {
+    var cancelButton = createButton("Cancel", "hidden edit-mode", function() {
         showElements([nameText, updateButton, deleteButton], true);
         showElements([nameSelect, saveButton, cancelButton], false);
     });
 
-    var updateButton = createButton("Update", "", function() {
+    var updateButton = createButton("Update", "read-mode", function() {
+        disableEditModeAll();
+
         showElements([nameSelect, dateInput, saveButton, cancelButton], true);
         showElements([nameText, dateText, updateButton, deleteButton], false);
 
@@ -106,11 +110,24 @@ function saveRow(nameSelect, nameText, dateInput, dateText) {
 function showElements(elementsArray, isVisible) {
     elementsArray.forEach(element => {
         if (isVisible) {
-            element.className = "";
+            element.classList.remove("hidden");
         } else {
-            element.className = "hidden";
+            element.classList.add("hidden");
         }
     });
+}
+
+function disableEditModeAll() {
+    var editModeElements = document.getElementsByClassName('edit-mode');
+    var readModeElements = document.getElementsByClassName('read-mode');
+
+    for (element of editModeElements) {
+        element.classList.add('hidden');
+    }
+
+    for (element of readModeElements) {
+        element.classList.remove('hidden');
+    }
 }
 
 function createSelectElement(selectedValue) {
