@@ -11,6 +11,13 @@
     <header>
         <h1>Table my activities.</h1>
     </header>
+    <div class="new-row-control">
+        <select id="name">
+        </select>
+        <input id="date" type="datetime-local">
+        <button onclick="addRow('tableID')">Add</button>
+    </div>
+
     <div class="main-div">
         <table id="tableID" border="1" width="55%">
             <tr>
@@ -18,25 +25,7 @@
                 <th><b>Name</b></th>
                 <th><b>Date</b></th>
             </tr>
-
-            <tr>
-                <td>1</td>
-                <td>Football</td>
-                <td>01.04.2021</td>
-                <td class="button-control">
-                    <button>Update</button>
-                </td>
-                <td class="button-control">
-                    <button onclick="deleteRow(1)">Delete</button>
-                </td>
-            </tr>
-
         </table>
-        <div class="new-row-control">
-            <input id="name" type="text">
-            <input id="date" type="datetime-local">
-            <button onclick="addRow('tableID')">Add</button>
-        </div>
     </div>
 
     <footer>

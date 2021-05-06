@@ -1,3 +1,17 @@
+var arrayOptions = ['Read', 'Write', 'Sleep', 'Dinner'];
+
+document.addEventListener('DOMContentLoaded', function() {
+    var nameElement = document.getElementById("name");
+
+    arrayOptions.forEach((option, index) => {
+        var optionElement = document.createElement("option");
+        optionElement.textContent = option;
+        optionElement.value = option;
+
+        nameElement.appendChild(optionElement);
+    });
+})
+
 function addRow(tableID) {
     var table = document.getElementById(tableID);
 
@@ -7,42 +21,38 @@ function addRow(tableID) {
     var cell1 = row.insertCell(0);
     cell1.innerHTML = rowCount;
 
-    var nameVal = document.getElementById("name").value;
+    var nameElement = document.getElementById("name");
 
     var nameText = document.createElement("text");
-    nameText.innerHTML = nameVal;
+    nameText.innerHTML = nameElement.value;
 
-    var nameInput = document.createElement("input");
-    nameInput.className = "hidden";
+    var nameSelect = createSelectElement(nameElement.value);
+    nameSelect.className = "hidden";
 
     var cell2 = row.insertCell(1);
-    cell2.appendChild(nameInput);
+    cell2.appendChild(nameSelect);
     cell2.appendChild(nameText);
 
     var dateVal = document.getElementById("date").value;
 
     var dateText = document.createElement("text");
-    dateText.innerHTML = dateVal;
+    dateText.innerHTML = dateVal != "" ? dateVal : "текущая дата";
 
     var dateInput = document.createElement("input");
     dateInput.className = "hidden";
     dateInput.type = "datetime-local";
 
     var cell3 = row.insertCell(2);
-    //cell3.innerHTML = dateVal;
     cell3.appendChild(dateInput);
     cell3.appendChild(dateText);
-
 
     var cell4 = row.insertCell(3);
     var deleteButton = createButton("Delete", "", function() { deleteRow(row.rowIndex) });
     var saveButton = createButton("Save", "hidden", function() {
         showElements([nameText, dateText, updateButton, deleteButton], true);
-        showElements([nameInput, dateInput, saveButton, cancelButton], false);
+        showElements([nameSelect, dateInput, saveButton, cancelButton], false);
 
-
-        saveRow(nameInput, nameText, dateInput, dateText);
-        //saveRow(nameInput, dateText);
+        saveRow(nameSelect, nameText, dateInput, dateText);
     });
 
     cell4.appendChild(deleteButton);
@@ -51,14 +61,14 @@ function addRow(tableID) {
     var cell5 = row.insertCell(4);
     var cancelButton = createButton("Cancel", "hidden", function() {
         showElements([nameText, updateButton, deleteButton], true);
-        showElements([nameInput, saveButton, cancelButton], false);
+        showElements([nameSelect, saveButton, cancelButton], false);
     });
 
     var updateButton = createButton("Update", "", function() {
-        showElements([nameInput, dateInput, saveButton, cancelButton], true);
+        showElements([nameSelect, dateInput, saveButton, cancelButton], true);
         showElements([nameText, dateText, updateButton, deleteButton], false);
 
-        updateRow(nameInput, nameText, dateInput, dateText);
+        updateRow(nameSelect, nameText, dateInput, dateText);
     });
 
     cell5.appendChild(updateButton);
@@ -79,18 +89,18 @@ function deleteRow(i) {
     table.deleteRow(i);
 }
 
-function updateRow(nameInput, nameText, dateInput, dateText) {
+function updateRow(nameSelect, nameText, dateInput, dateText) {
     var nameVal = nameText.innerHTML;
-    nameInput.value = nameVal;
+    nameSelect.value = nameSelect.value;
     var dateVal = dateText.innerHTML;
     dateInput.value = dateVal;
 }
 
-function saveRow(nameInput, nameText, dateInput, dateText) {
-    var nameVal = nameInput.value;
+function saveRow(nameSelect, nameText, dateInput, dateText) {
+    var nameVal = nameSelect.value;
     nameText.innerHTML = nameVal;
     var dateVal = dateInput.value;
-    dateI.innerHTML = dateVal;
+    dateText.innerHTML = dateVal;
 }
 
 function showElements(elementsArray, isVisible) {
@@ -101,4 +111,22 @@ function showElements(elementsArray, isVisible) {
             element.className = "hidden";
         }
     });
+}
+
+function createSelectElement(selectedValue) {
+    var selectElement = document.createElement("select");
+
+    arrayOptions.forEach((option, index) => {
+        var optionElement = document.createElement("option");
+        optionElement.textContent = option;
+        optionElement.value = option;
+
+        selectElement.appendChild(optionElement);
+    });
+
+    if (selectedValue) {
+        selectElement.value = selectedValue;
+    }
+
+    return selectElement;
 }
