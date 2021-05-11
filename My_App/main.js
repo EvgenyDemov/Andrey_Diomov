@@ -1,4 +1,4 @@
-var arrayOptions = ['Read', 'Write', 'Sleep', 'Dinner'];
+var arrayOptions = ['', 'Read', 'Write', 'Sleep', 'Dinner'];
 
 document.addEventListener('DOMContentLoaded', function() {
     var nameElement = document.getElementById("name");
@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function addRow(tableID) {
     var table = document.getElementById(tableID);
+    var nameElement = document.getElementById("name");
+
+    if (nameElement.value == '') {
+        alert("Выберите значение!");
+
+        return;
+    }
 
     var rowCount = table.rows.length;
     var row = table.insertRow(rowCount);
@@ -21,10 +28,10 @@ function addRow(tableID) {
     var cell1 = row.insertCell(0);
     cell1.innerHTML = rowCount;
 
-    var nameElement = document.getElementById("name");
 
     var nameText = document.createElement("text");
     nameText.innerHTML = nameElement.value;
+    nameElement.value = "";
     nameText.className = "read-mode";
 
     var nameSelect = createSelectElement(nameElement.value);
@@ -37,7 +44,11 @@ function addRow(tableID) {
     var dateVal = document.getElementById("date").value;
 
     var dateText = document.createElement("text");
-    dateText.innerHTML = dateVal != "" ? dateVal : "текущая дата";
+
+    var isoStr = new Date().toISOString();
+    var currentDate = isoStr.substring(0, isoStr.length - 8);
+
+    dateText.innerHTML = dateVal != "" ? dateVal : currentDate;
     dateText.className = "read-mode";
 
     var dateInput = document.createElement("input");
@@ -62,11 +73,19 @@ function addRow(tableID) {
 
     var cell5 = row.insertCell(4);
     var cancelButton = createButton("Cancel", "hidden edit-mode", function() {
-        showElements([nameText, updateButton, deleteButton], true);
-        showElements([nameSelect, saveButton, cancelButton], false);
+        showElements([nameText, dateText, updateButton, deleteButton], true);
+        showElements([nameSelect, dateInput, saveButton, cancelButton], false);
     });
 
     var updateButton = createButton("Update", "read-mode", function() {
+        var hiddentReadModeElements = document.getElementsByClassName('read-mode hidden');
+
+        if (hiddentReadModeElements.length > 0) {
+            if (!confirm('You will lose your changes, ok?')) {
+                return;
+            }
+        }
+
         disableEditModeAll();
 
         showElements([nameSelect, dateInput, saveButton, cancelButton], true);
@@ -89,8 +108,11 @@ function createButton(name, className, clickFunction) {
 }
 
 function deleteRow(i) {
-    var table = document.getElementById('tableID');
-    table.deleteRow(i);
+    var confirmResult = confirm('Are you sure?');
+    if (confirmResult) {
+        var table = document.getElementById('tableID');
+        table.deleteRow(i);
+    }
 }
 
 function updateRow(nameSelect, nameText, dateInput, dateText) {
